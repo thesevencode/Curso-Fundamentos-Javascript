@@ -2,6 +2,8 @@
 var nombreLuis = "Luis"
 var apellidoLuis = "Quispe"
 
+
+
 var Luis = {
     edad : 21,
     apellido: "Quispe",

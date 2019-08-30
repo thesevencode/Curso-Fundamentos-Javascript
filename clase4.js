@@ -4,6 +4,10 @@ var nombre = "Denis", edad = 21 //variables globales
 //Camel Case :  holaJohnIsmael
 //Pascal case : HolaJohnIsmael
 
+function imprimir(){
+
+}
+
 function imprimirEdad(n, e){
     var total = 35 //variable local
     //nombre se convierte en variable local
@@ -11,9 +15,11 @@ function imprimirEdad(n, e){
     e += 2 //efecto de helado
     //Hola Denis tengo 21 años
     console.log(`Hola ${n.toUpperCase()} tengo ${e} años`)
+ 
 
-    imprimirCantidadLetras(n)
+    imprimirCantidadLetras(n)//invocando a un funcion
 }
+
 
 
 

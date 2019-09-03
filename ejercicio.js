@@ -3,7 +3,7 @@ var Luis = {
     apellido: "Quispe",
     genero: "Masculino",
     talla: 1.69,
-    peso: 75,
+    peso: 35,
     edad: 15
 }
 
@@ -12,6 +12,7 @@ const DIAS_DEL_ANO = 365
 const incrementarPeso = persona => persona.peso+= INCREMENTO_PESO
 const bajarPeso = persona => persona.peso -= INCREMENTO_PESO
 const calucarImc = ({ peso, talla }) => peso/(talla*talla)
+
 
 //calcularImc(Luis) => 
 
@@ -38,4 +39,8 @@ function corregirPeso (persona){
     console.log(`Tuvieron que pasar ${dias} dias para que  ${persona.nombre} obtenga su peso ideal de ${Math.round(persona.peso)} `)
 
     
+}
+
+function hola(j){
+    j++
 }

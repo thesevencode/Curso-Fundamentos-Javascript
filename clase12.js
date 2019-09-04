@@ -7,6 +7,10 @@
         var mensaje
 
         switch(signo){
+            case 'cáncer':
+            case 'cancer':
+                mensaje = "Mensjae para cáncer"
+                break
             case 'tauro':
                 //cáncer
                 mensaje = "vas a jalar"

@@ -53,6 +53,7 @@ class Desarrollador extends Persona{
 
 }
 
+
 function responderSaludo(nombre, apellido, isDev){
     console.log(`Bienvenido ${nombre} ${apellido.toUpperCase()}`)
     if(isDev){

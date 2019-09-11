@@ -126,5 +126,76 @@
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
 
+    <script>
+        const celeste = document.getElementById("celeste")
+        const violeta = document.getElementById("violeta")
+        const naranja = document.getElementById("naranja")
+        const verde = document.getElementById("verde")
+        const boton = document.getElementById("btnEmpezar")
+
+        class Juego{
+            constructor(){
+                this.iniciar()
+                this.generarSecuencia()
+                this.iluminarColor()
+            }
+
+            iniciar(){
+                boton.classList.add("hide")
+                this.nivel = 7
+                this.colores = {
+                    celeste,
+                    violeta, //violeta: violeta
+                    naranja,
+                    verde
+                }
+            }
+            generarSecuencia(){
+                this.secuencia = new Array(10).fill(0).map((n) => Math.floor(Math.random()*4) )
+            }
+
+            iluminarColor(){
+                for(var i = 0; i < this.nivel ; i++){
+                    const color = this.tranformarColor(this.secuencia[i])
+                    setTimeout(()=>{
+                        this.colores[color].classList.add("light")
+                        this.apagarColor(color)
+                    }, 1000 * i)
+
+                }
+            }
+
+            apagarColor(color){
+                setTimeout(()=>{
+                    this.colores[color].classList.remove("light")
+                }, 350)
+            }
+            tranformarColor(numero){
+                var color = ""
+                switch(numero){
+                    case 0:
+                        color = 'celeste'
+                        break
+                    case 1:
+                        color = 'violeta'
+                        break
+                    case 2:
+                        color = 'verde'
+                        break
+                    case 3:
+                        color = 'naranja'
+                        break
+                }
+                return color
+            }
+
+        }
+
+        function empezarJuego(){
+            window.juego = new Juego()//es un this global
+        }
+
+    </script>
+
 </body>
 </html>

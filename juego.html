@@ -132,37 +132,51 @@
         const naranja = document.getElementById("naranja")
         const verde = document.getElementById("verde")
         const boton = document.getElementById("btnEmpezar")
+        const ULTIMO_NIVEL = 2
 
         class Juego{
             constructor(){
-                this.iniciar()
                 this.generarSecuencia()
-                this.iluminarColor()
+                this.iniciar()
+                setTimeout(this.siguienteNivel, 500);
             }
 
             iniciar(){
                 boton.classList.add("hide")
-                this.nivel = 7
+                this.nivel = 1
+                this.elegirColor = this.elegirColor.bind(this)
                 this.colores = {
-                    celeste,
+                    celeste : celeste,
                     violeta, //violeta: violeta
                     naranja,
                     verde
                 }
-            }
-            generarSecuencia(){
-                this.secuencia = new Array(10).fill(0).map((n) => Math.floor(Math.random()*4) )
+                this.siguienteNivel = this.siguienteNivel.bind(this)
             }
 
-            iluminarColor(){
+            generarSecuencia(){
+                this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map((n) => Math.floor(Math.random()*4) )
+            }
+
+            siguienteNivel(){
+              this.subnivel = 0
+              this.iluminarSecuencia()
+              this.agregarEventoClick()
+            }
+
+            iluminarSecuencia(){
                 for(var i = 0; i < this.nivel ; i++){
-                    const color = this.tranformarColor(this.secuencia[i])
+                    const color = this.tranformarNumeroColor(this.secuencia[i])
                     setTimeout(()=>{
-                        this.colores[color].classList.add("light")
-                        this.apagarColor(color)
+                        this.iluminarColor(color)
                     }, 1000 * i)
 
                 }
+            }
+
+            iluminarColor(color){
+              this.colores[color].classList.add("light")
+              this.apagarColor(color)
             }
 
             apagarColor(color){
@@ -170,7 +184,41 @@
                     this.colores[color].classList.remove("light")
                 }, 350)
             }
-            tranformarColor(numero){
+
+            agregarEventoClick(){
+              this.colores.celeste.addEventListener("click", this.elegirColor)//bindear o amarrar la funcion a un this
+              this.colores.naranja.addEventListener("click", this.elegirColor)
+              this.colores.verde.addEventListener("click", this.elegirColor)
+              this.colores.violeta.addEventListener("click", this.elegirColor)
+            }
+
+            elegirColor(ev){ 
+              const nombreColor = ev.target.dataset.color
+              const numero = this.tranformarColorNumero(nombreColor)
+              this.iluminarColor(nombreColor)
+              if(numero === this.secuencia[this.subnivel] ){
+                this.subnivel++
+
+                if(this.subnivel === this.nivel){
+                  this.nivel++
+                  if(this.nivel == (ULTIMO_NIVEL +1) ){
+                    console.log("GANASTE")
+                  }else{
+                    console.log("siguiente nivel")
+                    setTimeout(this.siguienteNivel, 1500)
+                  }
+
+                }
+
+              }else{
+                //perdio luser
+                console.log("perdiste :(")
+              }
+
+
+            }
+
+            tranformarNumeroColor(numero){
                 var color = ""
                 switch(numero){
                     case 0:
@@ -187,6 +235,25 @@
                         break
                 }
                 return color
+            }
+
+            tranformarColorNumero(color){
+                var numero = 0
+                switch(color){
+                    case "celeste":
+                        numero = 0
+                        break
+                    case "violeta":
+                        numero = 1
+                        break
+                    case "verde":
+                        numero = 2
+                        break
+                    case "naranja":
+                        numero = 3
+                        break
+                }
+                return numero
             }
 
         }

@@ -116,7 +116,8 @@
     </style>
   </head>
   <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+
 
     <div class="gameboard">
       <div id="celeste" class="color celeste left" data-color="celeste"></div>
@@ -125,8 +126,31 @@
       <div id="verde" class="color verde right" data-color="verde"></div>
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
+    <img src="" id="pokemon1" alt="" style="position: absolute;
+    width: 200px;
+    height: 200px;">
+    <img src="" id="pokemon2" alt="" style="position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 0;
+    left: 45%;">
+    <img src="" id="pokemon3" alt="" style="position: absolute;
+    width: 200px;
+    height: 200px;
+    right: 0;
+    top: 45%;">
+    <img src="" id="pokemon4" alt="" style="position: absolute;
+    width: 200px;
+    height: 200px;
+    bottom: 0;
+    left: 45%;">
 
     <script>
+      const URL = "https://pokeapi.co/api/v2/"
+      const PEOPLE_URL = "pokemon/:id"
+      const opciones = { crossDomain: true }
+
+
         const celeste = document.getElementById("celeste")
         const violeta = document.getElementById("violeta")
         const naranja = document.getElementById("naranja")
@@ -136,22 +160,32 @@
 
         class Juego{
             constructor(){
-                this.generarSecuencia()
                 this.iniciar()
+                this.generarSecuencia()
                 setTimeout(this.siguienteNivel, 500);
             }
 
             iniciar(){
-                boton.classList.add("hide")
-                this.nivel = 1
+                
                 this.elegirColor = this.elegirColor.bind(this)
+                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.nivel = 1
                 this.colores = {
                     celeste : celeste,
                     violeta, //violeta: violeta
                     naranja,
                     verde
                 }
-                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.aparecerOcultar()
+                
+            }
+
+            aparecerOcultar(){
+              if(boton.classList.contains('hide')){
+                boton.classList.remove('hide')
+                return false
+              }
+              boton.classList.add('hide')
             }
 
             generarSecuencia(){
@@ -161,7 +195,9 @@
             siguienteNivel(){
               this.subnivel = 0
               this.iluminarSecuencia()
-              this.agregarEventoClick()
+                              this.agregarEventoClick()
+
+
             }
 
             iluminarSecuencia(){
@@ -170,6 +206,7 @@
                     setTimeout(()=>{
                         this.iluminarColor(color)
                     }, 1000 * i)
+                    
 
                 }
             }
@@ -192,7 +229,16 @@
               this.colores.violeta.addEventListener("click", this.elegirColor)
             }
 
+            eliminarEventoClick(){
+              this.colores.celeste.removeEventListener("click", this.elegirColor)
+              this.colores.naranja.removeEventListener("click", this.elegirColor)
+              this.colores.verde.removeEventListener("click", this.elegirColor)
+              this.colores.violeta.removeEventListener("click", this.elegirColor)
+            }
+
             elegirColor(ev){ 
+              console.log(this.secuencia)
+              
               const nombreColor = ev.target.dataset.color
               const numero = this.tranformarColorNumero(nombreColor)
               this.iluminarColor(nombreColor)
@@ -201,8 +247,10 @@
 
                 if(this.subnivel === this.nivel){
                   this.nivel++
+                  this.eliminarEventoClick()
+                  // this.eliminarEventoClick()
                   if(this.nivel == (ULTIMO_NIVEL +1) ){
-                    console.log("GANASTE")
+                    this.ganaste()
                   }else{
                     console.log("siguiente nivel")
                     setTimeout(this.siguienteNivel, 1500)
@@ -212,10 +260,39 @@
 
               }else{
                 //perdio luser
-                console.log("perdiste :(")
+                this.perdiste()
               }
 
 
+            }
+
+            ganaste(){
+                Swal.fire(
+                  'ByteCode!',
+                  'Usted gano el juego!',
+                  'success'
+                ).then(()=>{
+                  this.eliminarEventoClick()
+                  this.iniciar()
+                  const personajeUrl = `${URL}${PEOPLE_URL.replace(":id", Math.floor(Math.random()*10) )}`
+                  $.get( personajeUrl, opciones, function (data){
+                    $("#pokemon1").attr("src",data.sprites.back_default)
+                    $("#pokemon2").attr("src",data.sprites.back_default)
+                    $("#pokemon3").attr("src",data.sprites.back_default)
+                    $("#pokemon4").attr("src",data.sprites.back_default)
+                  })
+                })
+            }
+
+            perdiste(){
+              Swal.fire(
+                  'ByteCode!',
+                  'Perdiste!',
+                  'error'
+              ).then(()=>{
+                this.eliminarEventoClick()
+                this.iniciar()
+              })
             }
 
             tranformarNumeroColor(numero){
@@ -263,6 +340,11 @@
         }
 
     </script>
+
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"></script>
 
 </body>
 </html>
